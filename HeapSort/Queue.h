@@ -12,9 +12,6 @@ public:
     int size();
     int pop();
     void push(int new_item);
-    void insert(int item, int pos);
-    int get(int pos);
-
 };
 
 Queue::Queue(int cap) {
@@ -58,41 +55,4 @@ void Queue::push(int new_item) {
     } N_op += 1;
     arr[rear] = new_item; N_op += 2;
     rear++; N_op += 2;
-}
-
-void Queue::insert(int item, int pos) {
-    if (pos >= rear) return; N_op += 1;
-    N_op += 2;
-    for (int i = 0; i < pos; i++) {
-        N_op += 2;
-        push(pop()); N_op += 4;
-    }
-    pop(); N_op += 2;
-    push(item); N_op += 2;
-
-    int rearDec1 = rear - 1; N_op += 2;
-    N_op += 2;
-    for (int i = pos; i < rearDec1; i++) {
-        N_op += 2;
-        push(pop()); N_op += 4;
-    }
-}
-
-int Queue::get(int pos) {
-    N_op += 1;
-    N_op += 2;
-    for (int i = 0; i < pos; i++) {
-        N_op += 2;
-        push(pop()); N_op += 4;
-    }
-    int output = pop(); N_op += 3;
-    push(output); N_op += 2;
-
-    int rearDec1 = rear - 1; N_op += 2;
-    N_op += 2;
-    for (int i = pos; i < rearDec1; i++) { // rear - 1 to prevent deleting of last item
-        N_op += 2;
-        push(pop()); N_op += 4;
-    }
-    N_op += 1; return output;
 }

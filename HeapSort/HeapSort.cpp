@@ -1,51 +1,39 @@
 ﻿#include <iostream>
 #include <ctime>
-#include "Queue.h"
+#include "QueueController.h"
 
 using namespace std;
 
-
-void display(Queue* queue) {
-    int n = queue -> size();
-    for (int i = 0; i < n; i++) {
-        cout << queue -> get(i) << " ";
-    }
-    cout << endl;
-}
-
-void swap(Queue* queue, int i, int j) {
-    int a = queue -> get(i);
-    queue -> insert(queue -> get(j), i);
-    queue -> insert(a, j);
-}
-
-void heapify(Queue* queue, int n, int i)
+void heapify(QueueController* queue, int n, int i)
 {
-    int largest = i;
+    int largest = i; queue->N_op++;
 
-    int l = 2 * i + 1; // левый 
-    int r = 2 * i + 2; // правый
+    int l = 2 * i + 1; queue->N_op += 3; // левый 
+    int r = 2 * i + 2; queue->N_op += 3; // правый
 
+    queue->N_op += 8;
     if (l < n && queue -> get(l) > queue -> get(largest))
-        largest = l;
+        largest = l; queue->N_op += 1;
 
+    queue->N_op += 8;
     if (r < n && queue -> get(r) > queue -> get(largest))
-        largest = r;
+        largest = r; queue->N_op += 1;
+    queue->N_op += 1;
     if (largest != i)
     {
-        swap(queue, i, largest);
+        queue -> swap(i, largest); queue->N_op += 4;
 
-        heapify(queue, n, largest);
+        heapify(queue, n, largest); queue->N_op += 4;
     }
 }
 
-void heapSort(Queue* queue) {
+void heapSort(QueueController* queue) {
     int n = queue -> size();
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(queue, n, i);
     for (int i = n - 1; i >= 0; i--)
     {
-        swap(queue, 0, i);
+        queue -> swap(0, i);
         heapify(queue, i, 0);
     }
 }
@@ -58,7 +46,7 @@ int main()
 
     for (int i = 0; i < 10; i++) {
         int n = amounts[i];
-        Queue* queue = new Queue(n);
+        QueueController* queue = new QueueController(n);
         for (int i = 0; i < n; i++) {
             int a = rand() % 1000;
             queue -> push(a);
@@ -71,7 +59,7 @@ int main()
         cout << "Количество отсортированных элементов: " << n << "   ";
         cout << "Время сортировки (ms): " << process_time << "   ";
         cout << "Количество операций (N_op): " << queue -> N_op << "   ";
-        display(queue);
+        cout << endl;
         delete queue;
     }
 }
