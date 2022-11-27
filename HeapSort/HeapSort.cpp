@@ -1,11 +1,13 @@
 ﻿#include <iostream>
 #include <ctime>
 #include "QueueController.h"
+#include <math.h>
 
 using namespace std;
 
 void heapify(QueueController* queue, int n, int i)
 {
+    queue->N_op += 3;
     int largest = i; queue->N_op++;
 
     int l = 2 * i + 1; queue->N_op += 3; // левый 
@@ -28,13 +30,19 @@ void heapify(QueueController* queue, int n, int i)
 }
 
 void heapSort(QueueController* queue) {
-    int n = queue -> size();
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(queue, n, i);
+    queue->N_op += 1;
+    int n = queue -> size(); queue->N_op += 2;
+    queue->N_op += 4;
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(queue, n, i); queue->N_op += 3;
+        queue->N_op += 4;
+    }
+    queue->N_op += 3;
     for (int i = n - 1; i >= 0; i--)
     {
-        queue -> swap(0, i);
-        heapify(queue, i, 0);
+        queue->N_op += 3;
+        queue -> swap(0, i); queue->N_op += 3;
+        heapify(queue, i, 0); queue->N_op += 3;
     }
 }
 
@@ -62,4 +70,21 @@ int main()
         cout << endl;
         delete queue;
     }
+    /*for (int i = 300; i <= 3000; i += 300) {
+        int n = i;
+;        float result = 10;
+        for (int i = 0; i <= n / 2 - 1; i++) {
+            result += 11;
+            if (i != 0)
+                result += (24 * (n - 1 - i) * (n - 1 - i) + 112 * (n - 1 - i) + 119) * (ceil(log2(n + 1)) - ceil(log2(i)));
+        }
+        for (int i = 0; i <= n - 1; i++) {
+            result += 9;
+            result += 24 * (n - 1 - i) * (n - 1 - i) + 112 * (n - 1 - i) + 119;
+            if (i != 0)
+                result += (24 * (n - 1 - i) * (n - 1 - i) + 112 * (n - 1 - i) + 119) * ceil(log2(n + 1));
+        }
+        cout << i << " " << result << endl;
+    }*/
+    
 }
